@@ -25,7 +25,7 @@
 
         {
 
-            return string.Format("{9,20} RD$ {1;N0}", Nombre, CalcularPrecio());
+            return string.Format("{0,-20} RD$ {1:N0}", Nombre, CalcularPrecio());
 
 
 
