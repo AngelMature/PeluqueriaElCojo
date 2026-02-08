@@ -5,7 +5,7 @@
     {
         public string Nombre { get; set; }
 
-        public decimal Preciobase { get; set; }
+        public decimal PrecioBase { get; set; }
 
         public int DuracionMinutos { get; set; }
 
@@ -14,12 +14,12 @@
         {
 
             Nombre = nombre;
-            Preciobase = precio;
+            PrecioBase = precio;
             DuracionMinutos = duracion;
 
         }
 
-        public virtual decimal CalcularPrecio() { return Preciobase; }
+        public virtual decimal CalcularPrecio() { return PrecioBase; }
 
         public virtual string GenerarLineaRecibo()
 

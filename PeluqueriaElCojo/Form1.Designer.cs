@@ -38,6 +38,9 @@
             this.chkAfeitado = new System.Windows.Forms.CheckBox();
             this.chkToalla = new System.Windows.Forms.CheckBox();
             this.chkCejas = new System.Windows.Forms.CheckBox();
+            this.btnCobrar = new System.Windows.Forms.Button();
+            this.txtRecibo = new System.Windows.Forms.TextBox();
+            this.lblTotal = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numNivel)).BeginInit();
             this.SuspendLayout();
             // 
@@ -145,11 +148,43 @@
             this.chkCejas.UseVisualStyleBackColor = true;
             this.chkCejas.CheckedChanged += new System.EventHandler(this.chkCejas_CheckedChanged);
             // 
+            // btnCobrar
+            // 
+            this.btnCobrar.Location = new System.Drawing.Point(525, 330);
+            this.btnCobrar.Name = "btnCobrar";
+            this.btnCobrar.Size = new System.Drawing.Size(75, 23);
+            this.btnCobrar.TabIndex = 10;
+            this.btnCobrar.Text = "COBRAR";
+            this.btnCobrar.UseVisualStyleBackColor = true;
+            this.btnCobrar.Click += new System.EventHandler(this.btnCobrar_Click_1);
+            // 
+            // txtRecibo
+            // 
+            this.txtRecibo.Location = new System.Drawing.Point(167, 65);
+            this.txtRecibo.Name = "txtRecibo";
+            this.txtRecibo.Size = new System.Drawing.Size(100, 22);
+            this.txtRecibo.TabIndex = 11;
+            this.txtRecibo.Text = "Multiline, Consolas";
+            this.txtRecibo.TextChanged += new System.EventHandler(this.txtRecibo_TextChanged);
+            // 
+            // lblTotal
+            // 
+            this.lblTotal.AutoSize = true;
+            this.lblTotal.Location = new System.Drawing.Point(647, 54);
+            this.lblTotal.Name = "lblTotal";
+            this.lblTotal.Size = new System.Drawing.Size(91, 16);
+            this.lblTotal.TabIndex = 12;
+            this.lblTotal.Text = "TOTAL: RD$0";
+            this.lblTotal.Click += new System.EventHandler(this.lblTotal_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.lblTotal);
+            this.Controls.Add(this.txtRecibo);
+            this.Controls.Add(this.btnCobrar);
             this.Controls.Add(this.chkCejas);
             this.Controls.Add(this.chkToalla);
             this.Controls.Add(this.chkAfeitado);
@@ -180,6 +215,9 @@
         private System.Windows.Forms.CheckBox chkAfeitado;
         private System.Windows.Forms.CheckBox chkToalla;
         private System.Windows.Forms.CheckBox chkCejas;
+        private System.Windows.Forms.Button btnCobrar;
+        private System.Windows.Forms.TextBox txtRecibo;
+        private System.Windows.Forms.Label lblTotal;
     }
 }
 

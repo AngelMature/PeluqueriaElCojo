@@ -155,5 +155,20 @@ namespace PeluqueriaElCojo
         {
 
         }
+
+        private void btnCobrar_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtRecibo_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lblTotal_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

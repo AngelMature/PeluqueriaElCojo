@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace PeluqueriaElCojo.Modelos
+﻿namespace PeluqueriaElCojo.Modelos 
 {
-    public class CorteNormal : Servicio
+    public enum TipoCliente 
     {
-        public CorteNormal() : base("Corte Normal", 200, 20) { }
+        Nuevo,
+        Regular,
+        VIP
     }
 }

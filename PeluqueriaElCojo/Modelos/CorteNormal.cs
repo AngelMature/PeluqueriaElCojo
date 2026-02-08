@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace PeluqueriaElCojo.Modelos
+﻿namespace PeluqueriaElCojo.Modelos
 {
-    internal class CorteNormal
+  
+    public class CorteNormal : Servicio
     {
+        
+        public CorteNormal() : base("Corte Normal", 300, 25)
+        {
+        }
+
+   
     }
 }
