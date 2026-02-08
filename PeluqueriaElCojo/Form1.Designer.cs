@@ -46,7 +46,7 @@
             // 
             // txtNombre
             // 
-            this.txtNombre.Location = new System.Drawing.Point(44, 273);
+            this.txtNombre.Location = new System.Drawing.Point(172, 54);
             this.txtNombre.Name = "txtNombre";
             this.txtNombre.Size = new System.Drawing.Size(100, 22);
             this.txtNombre.TabIndex = 0;
@@ -54,7 +54,7 @@
             // 
             // txtTelefono
             // 
-            this.txtTelefono.Location = new System.Drawing.Point(44, 342);
+            this.txtTelefono.Location = new System.Drawing.Point(444, 54);
             this.txtTelefono.Name = "txtTelefono";
             this.txtTelefono.Size = new System.Drawing.Size(100, 22);
             this.txtTelefono.TabIndex = 1;
@@ -62,49 +62,52 @@
             // 
             // btnAgregarCliente
             // 
-            this.btnAgregarCliente.Location = new System.Drawing.Point(44, 100);
+            this.btnAgregarCliente.Location = new System.Drawing.Point(424, 142);
             this.btnAgregarCliente.Name = "btnAgregarCliente";
             this.btnAgregarCliente.Size = new System.Drawing.Size(75, 23);
             this.btnAgregarCliente.TabIndex = 2;
             this.btnAgregarCliente.Text = "Agregar";
             this.btnAgregarCliente.UseVisualStyleBackColor = true;
-            this.btnAgregarCliente.Click += new System.EventHandler(this.btnAgregarCliente_Click_1);
+            this.btnAgregarCliente.Click += new System.EventHandler(this.btnAgregarCliente_Click);
             // 
             // lstClientes
             // 
             this.lstClientes.FormattingEnabled = true;
             this.lstClientes.ItemHeight = 16;
-            this.lstClientes.Location = new System.Drawing.Point(44, 148);
+            this.lstClientes.Location = new System.Drawing.Point(424, 223);
             this.lstClientes.Name = "lstClientes";
             this.lstClientes.Size = new System.Drawing.Size(120, 84);
             this.lstClientes.TabIndex = 3;
+            this.lstClientes.Click += new System.EventHandler(this.lstClientes_SelectedIndexChanged);
             this.lstClientes.SelectedIndexChanged += new System.EventHandler(this.lstClientes_SelectedIndexChanged_1);
             // 
             // chkCorteNormal
             // 
             this.chkCorteNormal.AutoSize = true;
-            this.chkCorteNormal.Location = new System.Drawing.Point(434, 193);
+            this.chkCorteNormal.Location = new System.Drawing.Point(173, 101);
             this.chkCorteNormal.Name = "chkCorteNormal";
             this.chkCorteNormal.Size = new System.Drawing.Size(167, 20);
             this.chkCorteNormal.TabIndex = 4;
             this.chkCorteNormal.Text = "Corte Normal (RD$200)";
             this.chkCorteNormal.UseVisualStyleBackColor = true;
             this.chkCorteNormal.CheckedChanged += new System.EventHandler(this.chkCorteNormal_CheckedChanged);
+            this.chkCorteNormal.Click += new System.EventHandler(this.chkCorteNormal_CheckedChanged);
             // 
             // chkDegradado
             // 
             this.chkDegradado.AutoSize = true;
-            this.chkDegradado.Location = new System.Drawing.Point(461, 249);
+            this.chkDegradado.Location = new System.Drawing.Point(173, 264);
             this.chkDegradado.Name = "chkDegradado";
             this.chkDegradado.Size = new System.Drawing.Size(99, 20);
             this.chkDegradado.TabIndex = 5;
             this.chkDegradado.Text = "Degradado";
             this.chkDegradado.UseVisualStyleBackColor = true;
             this.chkDegradado.CheckedChanged += new System.EventHandler(this.chkDegradado_CheckedChanged);
+            this.chkDegradado.Click += new System.EventHandler(this.chkDegradado_CheckedChanged);
             // 
             // numNivel
             // 
-            this.numNivel.Location = new System.Drawing.Point(349, 100);
+            this.numNivel.Location = new System.Drawing.Point(424, 99);
             this.numNivel.Maximum = new decimal(new int[] {
             5,
             0,
@@ -114,63 +117,69 @@
             this.numNivel.Size = new System.Drawing.Size(120, 22);
             this.numNivel.TabIndex = 6;
             this.numNivel.ValueChanged += new System.EventHandler(this.numNivel_ValueChanged);
+            this.numNivel.Click += new System.EventHandler(this.numNivel_ValueChanged);
             // 
             // chkAfeitado
             // 
             this.chkAfeitado.AutoSize = true;
-            this.chkAfeitado.Location = new System.Drawing.Point(253, 307);
+            this.chkAfeitado.Location = new System.Drawing.Point(173, 145);
             this.chkAfeitado.Name = "chkAfeitado";
             this.chkAfeitado.Size = new System.Drawing.Size(138, 20);
             this.chkAfeitado.TabIndex = 7;
             this.chkAfeitado.Text = "Afeitado (RD$150)";
             this.chkAfeitado.UseVisualStyleBackColor = true;
             this.chkAfeitado.CheckedChanged += new System.EventHandler(this.chkAfeitado_CheckedChanged);
+            this.chkAfeitado.Click += new System.EventHandler(this.chkAfeitado_CheckedChanged);
             // 
             // chkToalla
             // 
             this.chkToalla.AutoSize = true;
-            this.chkToalla.Location = new System.Drawing.Point(253, 342);
+            this.chkToalla.Location = new System.Drawing.Point(173, 182);
             this.chkToalla.Name = "chkToalla";
             this.chkToalla.Size = new System.Drawing.Size(137, 20);
             this.chkToalla.TabIndex = 8;
             this.chkToalla.Text = "+ Toalla (+RD$50)";
             this.chkToalla.UseVisualStyleBackColor = true;
             this.chkToalla.CheckedChanged += new System.EventHandler(this.chkToalla_CheckedChanged);
+            this.chkToalla.Click += new System.EventHandler(this.chkToalla_CheckedChanged);
             // 
             // chkCejas
             // 
             this.chkCejas.AutoSize = true;
-            this.chkCejas.Location = new System.Drawing.Point(253, 386);
+            this.chkCejas.Location = new System.Drawing.Point(173, 223);
             this.chkCejas.Name = "chkCejas";
             this.chkCejas.Size = new System.Drawing.Size(116, 20);
             this.chkCejas.TabIndex = 9;
             this.chkCejas.Text = "Cejas (RD$75)";
             this.chkCejas.UseVisualStyleBackColor = true;
             this.chkCejas.CheckedChanged += new System.EventHandler(this.chkCejas_CheckedChanged);
+            this.chkCejas.Click += new System.EventHandler(this.chkCejas_CheckedChanged);
             // 
             // btnCobrar
             // 
-            this.btnCobrar.Location = new System.Drawing.Point(525, 330);
+            this.btnCobrar.Location = new System.Drawing.Point(424, 332);
             this.btnCobrar.Name = "btnCobrar";
             this.btnCobrar.Size = new System.Drawing.Size(75, 23);
             this.btnCobrar.TabIndex = 10;
             this.btnCobrar.Text = "COBRAR";
             this.btnCobrar.UseVisualStyleBackColor = true;
-            this.btnCobrar.Click += new System.EventHandler(this.btnCobrar_Click_1);
+            this.btnCobrar.TextChanged += new System.EventHandler(this.btnCobrar_Click_1);
+            this.btnCobrar.Click += new System.EventHandler(this.btnCobrar_Click);
             // 
             // txtRecibo
             // 
-            this.txtRecibo.Location = new System.Drawing.Point(167, 65);
+            this.txtRecibo.Location = new System.Drawing.Point(424, 182);
             this.txtRecibo.Name = "txtRecibo";
             this.txtRecibo.Size = new System.Drawing.Size(100, 22);
             this.txtRecibo.TabIndex = 11;
             this.txtRecibo.Text = "Multiline, Consolas";
+            this.txtRecibo.Click += new System.EventHandler(this.txtRecibo_TextChanged);
             this.txtRecibo.TextChanged += new System.EventHandler(this.txtRecibo_TextChanged);
             // 
             // lblTotal
             // 
             this.lblTotal.AutoSize = true;
-            this.lblTotal.Location = new System.Drawing.Point(647, 54);
+            this.lblTotal.Location = new System.Drawing.Point(304, 388);
             this.lblTotal.Name = "lblTotal";
             this.lblTotal.Size = new System.Drawing.Size(91, 16);
             this.lblTotal.TabIndex = 12;

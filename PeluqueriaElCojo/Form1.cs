@@ -116,11 +116,6 @@ namespace PeluqueriaElCojo
 
         }
 
-        private void btnAgregarCliente_Click_1(object sender, EventArgs e)
-        {
-
-        }
-
         private void lstClientes_SelectedIndexChanged_1(object sender, EventArgs e)
         {
 
