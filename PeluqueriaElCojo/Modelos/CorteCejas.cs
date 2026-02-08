@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace PeluqueriaElCojo.Modelos
 {
-    public class CorteNormal : Servicio
+    public class CorteCejas : Servicio
     {
-        public CorteNormal() : base("Corte Normal", 200, 20) { }
+        public CorteCejas() : base("Corte de Cejas", 75, 10) { }
     }
 }

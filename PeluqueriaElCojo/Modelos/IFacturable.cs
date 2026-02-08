@@ -6,8 +6,11 @@ using System.Threading.Tasks;
 
 namespace PeluqueriaElCojo.Modelos
 {
-    public class CorteNormal : Servicio
+    public interface IFacturable
     {
-        public CorteNormal() : base("Corte Normal", 200, 20) { }
+        decimal CalcularPrecio();
+
+        string GeneralLineaRecibo();
     }
+
 }
