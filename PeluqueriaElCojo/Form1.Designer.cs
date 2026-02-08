@@ -74,9 +74,9 @@
             // 
             this.lstClientes.FormattingEnabled = true;
             this.lstClientes.ItemHeight = 16;
-            this.lstClientes.Location = new System.Drawing.Point(424, 223);
+            this.lstClientes.Location = new System.Drawing.Point(424, 182);
             this.lstClientes.Name = "lstClientes";
-            this.lstClientes.Size = new System.Drawing.Size(179, 84);
+            this.lstClientes.Size = new System.Drawing.Size(325, 84);
             this.lstClientes.TabIndex = 3;
             this.lstClientes.Click += new System.EventHandler(this.lstClientes_SelectedIndexChanged);
             this.lstClientes.SelectedIndexChanged += new System.EventHandler(this.lstClientes_SelectedIndexChanged_1);
@@ -157,7 +157,7 @@
             // 
             // btnCobrar
             // 
-            this.btnCobrar.Location = new System.Drawing.Point(424, 332);
+            this.btnCobrar.Location = new System.Drawing.Point(424, 292);
             this.btnCobrar.Name = "btnCobrar";
             this.btnCobrar.Size = new System.Drawing.Size(75, 23);
             this.btnCobrar.TabIndex = 10;
@@ -168,9 +168,9 @@
             // 
             // txtRecibo
             // 
-            this.txtRecibo.Location = new System.Drawing.Point(424, 182);
+            this.txtRecibo.Location = new System.Drawing.Point(12, 416);
             this.txtRecibo.Name = "txtRecibo";
-            this.txtRecibo.Size = new System.Drawing.Size(179, 22);
+            this.txtRecibo.Size = new System.Drawing.Size(776, 22);
             this.txtRecibo.TabIndex = 11;
             this.txtRecibo.Text = "Multiline, Consolas";
             this.txtRecibo.Click += new System.EventHandler(this.txtRecibo_TextChanged);
@@ -179,7 +179,7 @@
             // lblTotal
             // 
             this.lblTotal.AutoSize = true;
-            this.lblTotal.Location = new System.Drawing.Point(304, 388);
+            this.lblTotal.Location = new System.Drawing.Point(316, 366);
             this.lblTotal.Name = "lblTotal";
             this.lblTotal.Size = new System.Drawing.Size(91, 16);
             this.lblTotal.TabIndex = 12;
