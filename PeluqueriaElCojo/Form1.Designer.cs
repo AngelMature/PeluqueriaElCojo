@@ -76,7 +76,7 @@
             this.lstClientes.ItemHeight = 16;
             this.lstClientes.Location = new System.Drawing.Point(424, 223);
             this.lstClientes.Name = "lstClientes";
-            this.lstClientes.Size = new System.Drawing.Size(120, 84);
+            this.lstClientes.Size = new System.Drawing.Size(179, 84);
             this.lstClientes.TabIndex = 3;
             this.lstClientes.Click += new System.EventHandler(this.lstClientes_SelectedIndexChanged);
             this.lstClientes.SelectedIndexChanged += new System.EventHandler(this.lstClientes_SelectedIndexChanged_1);
@@ -170,7 +170,7 @@
             // 
             this.txtRecibo.Location = new System.Drawing.Point(424, 182);
             this.txtRecibo.Name = "txtRecibo";
-            this.txtRecibo.Size = new System.Drawing.Size(100, 22);
+            this.txtRecibo.Size = new System.Drawing.Size(179, 22);
             this.txtRecibo.TabIndex = 11;
             this.txtRecibo.Text = "Multiline, Consolas";
             this.txtRecibo.Click += new System.EventHandler(this.txtRecibo_TextChanged);
