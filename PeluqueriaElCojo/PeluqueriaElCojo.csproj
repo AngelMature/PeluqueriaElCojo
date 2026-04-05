@@ -57,6 +57,7 @@
     <Compile Include="Modelos\CorteCejas.cs" />
     <Compile Include="Modelos\CorteNormal.cs" />
     <Compile Include="Modelos\Degradado.cs" />
+    <Compile Include="Modelos\Empleado.cs" />
     <Compile Include="Modelos\enum.cs" />
     <Compile Include="Modelos\IFacturable.cs" />
     <Compile Include="Modelos\Servicio.cs" />
