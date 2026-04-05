@@ -1,6 +1,6 @@
 ﻿namespace PeluqueriaElCojo.Modelos
 {
-    public class Afeitado : Servicio
+    public class Afeitado : Servicio  //Especializacion de servicios usando herencia y sobrecarga de constructores
     {
         public bool ToallaCaliente { get; set; }
 
@@ -8,11 +8,12 @@
             : base(nombre, precio, duracion)
         {
             this.ToallaCaliente = toalla;
-        }
+
+                            }
 
         public override decimal CalcularPrecio()
-        {
+                 {
             return ToallaCaliente ? PrecioBase + 50 : PrecioBase;
         }
-    }
+                       } 
 }
