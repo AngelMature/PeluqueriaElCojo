@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PeluqueriaElCojo.Modelos
+namespace PeluqueriaElCojo.Modelos  //Implementacion de clase base Servicio con encapsulacion de datos
 {
     public abstract class Servicio : IFacturable
     {
@@ -18,8 +18,11 @@ namespace PeluqueriaElCojo.Modelos
             this.DuracionMinutos = duracion;
         }
 
+
    
         public virtual decimal CalcularPrecio()
+
+
         {
             return precioBase;
         }
