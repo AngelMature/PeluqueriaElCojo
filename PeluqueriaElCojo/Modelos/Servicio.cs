@@ -1,39 +1,32 @@
-﻿namespace PeluqueriaElCojo.Modelos
+﻿using System;
+
+namespace PeluqueriaElCojo.Modelos
 {
-
-    public class Servicio : IFacturable
+    public abstract class Servicio : IFacturable
     {
-        public string Nombre { get; set; }
+        private string nombre;
+        private decimal precioBase;
 
-        public decimal PrecioBase { get; set; }
-
+        public string Nombre { get { return nombre; } set { nombre = value; } }
+        public decimal PrecioBase { get { return precioBase; } set { precioBase = value; } }
         public int DuracionMinutos { get; set; }
 
         public Servicio(string nombre, decimal precio, int duracion)
-
         {
-
-            Nombre = nombre;
-            PrecioBase = precio;
-            DuracionMinutos = duracion;
-
+            this.nombre = nombre;
+            this.precioBase = precio;
+            this.DuracionMinutos = duracion;
         }
 
-        public virtual decimal CalcularPrecio() { return PrecioBase; }
+   
+        public virtual decimal CalcularPrecio()
+        {
+            return precioBase;
+        }
 
         public virtual string GenerarLineaRecibo()
-
         {
-
-            return string.Format("{0,-20} RD$ {1:N0}", Nombre, CalcularPrecio());
-
-
-
-        }
-
-        public string GeneralLineaRecibo()
-        {
-            throw new System.NotImplementedException();
+            return string.Format("{0,-20} RD$ {1:N2}", nombre, CalcularPrecio());
         }
     }
 }

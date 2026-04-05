@@ -12,21 +12,25 @@ namespace PeluqueriaElCojo
         private List<Servicio> _servicios = new List<Servicio>();
         private Cliente _clienteActual = null;
 
-        public Form1() { InitializeComponent(); }
+        public Form1()
+        {
+            InitializeComponent();
+        }
 
         private void btnAgregarCliente_Click(object sender, EventArgs e)
         {
-            try
+            if (string.IsNullOrEmpty(txtNombre.Text))
             {
-                Cliente c = new Cliente(txtNombre.Text, txtTelefono.Text);
-                _clientes.Add(c);
-                lstClientes.Items.Add(c);
-                txtNombre.Clear(); txtTelefono.Clear();
+                MessageBox.Show("El nombre es obligatorio");
+                return;
             }
-            catch (ArgumentException ex)
-            {
-                MessageBox.Show("Error: " + ex.Message);
-            }
+
+            Cliente c = new Cliente(txtNombre.Text, txtTelefono.Text);
+            _clientes.Add(c);
+            lstClientes.Items.Add(c.Nombre); // Agregamos el nombre a la lista visual
+
+            txtNombre.Clear();
+            txtTelefono.Clear();
         }
 
         private void lstClientes_SelectedIndexChanged(object sender, EventArgs e)
@@ -37,62 +41,93 @@ namespace PeluqueriaElCojo
 
         private void btnCobrar_Click(object sender, EventArgs e)
         {
-            if (_clienteActual == null) { MessageBox.Show("Selecciona cliente"); return; }
+            if (_clienteActual == null)
+            {
+                MessageBox.Show("Por favor, selecciona un cliente de la lista.");
+                return;
+            }
 
             _servicios.Clear();
-            if (chkCorteNormal.Checked) _servicios.Add(new CorteNormal());
-            if (chkDegradado.Checked) _servicios.Add(new Degradado((int)numNivel.Value));
-            if (chkAfeitado.Checked) _servicios.Add(new Afeitado(chkToalla.Checked));
-            if (chkCejas.Checked) _servicios.Add(new CorteCejas());
 
-            if (_servicios.Count == 0) { MessageBox.Show("Selecciona servicios"); return; }
+            // Corregido: Pasando los parámetros que piden los constructores de tus clases
+            if (chkCorteNormal.Checked)
+                _servicios.Add(new CorteNormal("Corte Normal", 300m, 30));
 
+            if (chkDegradado.Checked)
+                _servicios.Add(new Degradado("Degradado", 450m, 45, (int)numNivel.Value));
+
+            if (chkAfeitado.Checked)
+                _servicios.Add(new Afeitado("Afeitado", 250m, 25, chkToalla.Checked));
+
+            if (chkCejas.Checked)
+                _servicios.Add(new CorteCejas("Corte de Cejas", 150m, 15));
+
+            if (_servicios.Count == 0)
+            {
+                MessageBox.Show("Debes seleccionar al menos un servicio.");
+                return;
+            }
+
+            // Registrar la visita para el sistema de fidelidad (VIP/Regular)
             _clienteActual.RegistrarVisita();
-            lstClientes.Items[lstClientes.SelectedIndex] = _clienteActual;
+
+            // Actualizar UI
             txtRecibo.Text = GenerarRecibo();
             lblTotal.Text = string.Format("TOTAL: RD${0:N2}", CalcularTotal());
+
             LimpiarChecks();
         }
 
         private decimal CalcularTotal()
         {
-            decimal sub = 0;
+            decimal subtotal = 0;
             foreach (Servicio s in _servicios)
-                sub += s.CalcularPrecio();  // POLIMORFISMO!
-            return sub * (1 - _clienteActual.ObtenerDescuento()) * 1.18m;
+                subtotal += s.CalcularPrecio();
+
+            decimal descuento = subtotal * _clienteActual.ObtenerDescuento();
+            decimal baseConDescuento = subtotal - descuento;
+            decimal itbis = baseConDescuento * 0.18m;
+
+            return baseConDescuento + itbis;
         }
 
         private string GenerarRecibo()
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine("╔═══════════════════════════════╗");
-            sb.AppendLine("║    PELUQUERÍA EL COJO         ║");
-            sb.AppendLine("║    Villa Mella, Sto. Domingo  ║");
-            sb.AppendLine("╠═══════════════════════════════╣");
-            sb.AppendLine(string.Format("║ Cliente: {0,-20}║", _clienteActual.Nombre));
-            sb.AppendLine(string.Format("║ Tipo: {0,-23}║", _clienteActual.Tipo));
-            sb.AppendLine("╠═══════════════════════════════╣");
+            decimal subtotal = 0;
 
-            decimal sub = 0;
+            sb.AppendLine("╔═══════════════════════════════════════╗");
+            sb.AppendLine("║          PELUQUERÍA EL COJO           ║");
+            sb.AppendLine("║      Villa Mella, Santo Domingo       ║");
+            sb.AppendLine("╠═══════════════════════════════════════╣");
+            sb.AppendLine(string.Format("║ Cliente: {0,-28} ║", _clienteActual.Nombre));
+            sb.AppendLine(string.Format("║ Tipo: {0,-31} ║", _clienteActual.Tipo));
+            sb.AppendLine("╠═══════════════════════════════════════╣");
+
             foreach (Servicio s in _servicios)
             {
-                sb.AppendLine(string.Format("║  {0,-27}║", s.GenerarLineaRecibo()));
-                sub += s.CalcularPrecio();
+                sb.AppendLine(string.Format("║ {0,-37} ║", s.GenerarLineaRecibo()));
+                subtotal += s.CalcularPrecio();
             }
 
-            sb.AppendLine("╠═══════════════════════════════╣");
-            sb.AppendLine(string.Format("║ Subtotal:        RD${0,8:N0} ║", sub));
+            decimal porcDesc = _clienteActual.ObtenerDescuento();
+            decimal montoDesc = subtotal * porcDesc;
+            decimal neto = subtotal - montoDesc;
+            decimal itbis = neto * 0.18m;
+            decimal totalFinal = neto + itbis;
 
-            decimal desc = _clienteActual.ObtenerDescuento();
-            if (desc > 0)
-                sb.AppendLine(string.Format("║ Descuento ({0}%): -RD${1,6:N0} ║", desc * 100, sub * desc));
+            sb.AppendLine("╠═══════════════════════════════════════╣");
+            sb.AppendLine(string.Format("║ Subtotal:            RD${0,12:N2} ║", subtotal));
 
-            decimal baseI = sub * (1 - desc);
-            sb.AppendLine(string.Format("║ ITBIS (18%):      RD${0,7:N0} ║", baseI * 0.18m));
-            sb.AppendLine("╠═══════════════════════════════╣");
-            sb.AppendLine(string.Format("║ TOTAL:           RD${0,8:N0} ║", baseI * 1.18m));
-            sb.AppendLine("╚═══════════════════════════════╝");
-            sb.AppendLine("      ¡Gracias por su visita!");
+            if (montoDesc > 0)
+                sb.AppendLine(string.Format("║ Descuento ({0:P0}):   -RD${1,12:N2} ║", porcDesc, montoDesc));
+
+            sb.AppendLine(string.Format("║ ITBIS (18%):         RD${0,12:N2} ║", itbis));
+            sb.AppendLine("╠═══════════════════════════════════════╣");
+            sb.AppendLine(string.Format("║ TOTAL A PAGAR:       RD${0,12:N2} ║", totalFinal));
+            sb.AppendLine("╚═══════════════════════════════════════╝");
+            sb.AppendLine("         ¡Gracias por preferirnos!       ");
+
             return sb.ToString();
         }
 
@@ -104,66 +139,6 @@ namespace PeluqueriaElCojo
             chkToalla.Checked = false;
             chkCejas.Checked = false;
             numNivel.Value = 1;
-        }
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox2_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void lstClientes_SelectedIndexChanged_1(object sender, EventArgs e)
-        {
-
-        }
-
-        private void chkCorteNormal_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void chkDegradado_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void numNivel_ValueChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void chkAfeitado_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void chkToalla_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void chkCejas_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void btnCobrar_Click_1(object sender, EventArgs e)
-        {
-
-        }
-
-        private void txtRecibo_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void lblTotal_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }

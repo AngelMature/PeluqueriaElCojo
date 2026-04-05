@@ -1,13 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace PeluqueriaElCojo.Modelos
+﻿namespace PeluqueriaElCojo.Modelos
 {
     public class CorteCejas : Servicio
     {
-        public CorteCejas() : base("Corte de Cejas", 75, 10) { }
+        public CorteCejas(string nombre, decimal precio, int duracion)
+            : base(nombre, precio, duracion)
+        {
+        }
+
+        public override decimal CalcularPrecio()
+        {
+            return PrecioBase;
+        }
     }
 }

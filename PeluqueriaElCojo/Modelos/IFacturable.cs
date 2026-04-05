@@ -2,9 +2,7 @@
 {
     public interface IFacturable
     {
-        decimal CalcularPrecio();
-
-        string GeneralLineaRecibo();
+        decimal CalcularPrecio(); //Estructura inicial del proyecto y definicion de interfaz IFacturable
+        string GenerarLineaRecibo();
     }
-
 }
