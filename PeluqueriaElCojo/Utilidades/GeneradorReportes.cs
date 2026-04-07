@@ -35,6 +35,7 @@ namespace PeluqueriaElCojo.Utilidades
             }
             sb.AppendLine("Total registros: " + datos.Count);
             return sb.ToString();
+
         }
     }
 }
