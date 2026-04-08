@@ -34,8 +34,11 @@
             this.btnVerRanking = new System.Windows.Forms.Button();
             this.grpServicios = new System.Windows.Forms.GroupBox();
             this.chkToalla = new System.Windows.Forms.CheckBox();
+            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.numNivel)).BeginInit();
             this.grpServicios.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // lblNom
@@ -228,11 +231,30 @@
             this.chkToalla.Text = "Toalla Caliente - RD$50";
             this.chkToalla.CheckedChanged += new System.EventHandler(this.chkToalla_CheckedChanged);
             // 
+            // dateTimePicker1
+            // 
+            this.dateTimePicker1.Location = new System.Drawing.Point(89, 384);
+            this.dateTimePicker1.Name = "dateTimePicker1";
+            this.dateTimePicker1.Size = new System.Drawing.Size(200, 22);
+            this.dateTimePicker1.TabIndex = 14;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::PeluqueriaElCojo.Properties.Resources.ELCOJOPNG;
+            this.pictureBox1.Location = new System.Drawing.Point(373, 134);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(284, 272);
+            this.pictureBox1.TabIndex = 15;
+            this.pictureBox1.TabStop = false;
+            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 520);
+            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.dateTimePicker1);
             this.Controls.Add(this.btnVerRanking);
             this.Controls.Add(this.btnBackup);
             this.Controls.Add(this.lblStatus);
@@ -251,6 +273,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numNivel)).EndInit();
             this.grpServicios.ResumeLayout(false);
             this.grpServicios.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -275,5 +298,7 @@
         private System.Windows.Forms.Button btnBackup;
         private System.Windows.Forms.Button btnVerRanking;
         private System.Windows.Forms.CheckBox chkToalla;
+        private System.Windows.Forms.DateTimePicker dateTimePicker1;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }
