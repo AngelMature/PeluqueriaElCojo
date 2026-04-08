@@ -50,6 +50,7 @@
     <Compile Include="Atributos\RangoAttribute.cs" />
     <Compile Include="Atributos\RequeridoAttribute.cs" />
     <Compile Include="Atributos\TelefonoDominicanoAttribute.cs" />
+    <Compile Include="Atributos\ValidacionAttribute.cs" />
     <Compile Include="LoginForm.cs">
       <SubType>Form</SubType>
     </Compile>

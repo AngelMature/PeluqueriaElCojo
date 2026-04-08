@@ -2,14 +2,24 @@
 
 namespace PeluqueriaElCojo.Atributos
 {
-    [AttributeUsage(AttributeTargets.Property)]
-    public class TelefonoDominicanoAttribute : Attribute
+    public class TelefonoDominicanoAttribute : ValidacionAttribute
     {
-        public string Mensaje { get; set; }
-
+        
         public TelefonoDominicanoAttribute()
+            : base("Formato de teléfono dominicano inválido")
         {
-            this.Mensaje = "Formato de teléfono dominicano inválido";
+        }
+
+
+        public override bool EsValido(object valor)
+        {
+            if (valor == null) return false;
+
+            string telefono = valor.ToString();
+            // Lógica simple para validar prefijos de RD
+            return telefono.StartsWith("809") ||
+                   telefono.StartsWith("829") ||
+                   telefono.StartsWith("849");
         }
     }
 }
