@@ -22,10 +22,7 @@ namespace PeluqueriaElCojo
             _barberos.Add(new Empleado("Juan Manuel", "Principal", 25000) { TotalVentas = 5800 });
             _barberos.Add(new Empleado("Roberto", "Junior", 18000) { TotalVentas = 3200 });
 
-            cmbBarberos.DataSource = null;
-            cmbBarberos.DataSource = _barberos;
-            cmbBarberos.DisplayMember = "Nombre";
-
+            ActualizarComboBarberos();
             cmbTipoCliente.DataSource = Enum.GetValues(typeof(TipoCliente));
 
             if (!esAdmin)
@@ -37,9 +34,18 @@ namespace PeluqueriaElCojo
             }
             else
             {
+                btnBackup.Enabled = true;
+                btnVerRanking.Visible = true;
                 lblStatus.Text = "Sesión: Administrador (Acceso Total)";
                 lblStatus.ForeColor = System.Drawing.Color.DarkBlue;
             }
+        }
+
+        private void ActualizarComboBarberos()
+        {
+            cmbBarberos.DataSource = null;
+            cmbBarberos.DataSource = _barberos;
+            cmbBarberos.DisplayMember = "Nombre";
         }
 
         private void cmbBarberos_SelectedIndexChanged(object sender, EventArgs e)
@@ -73,21 +79,15 @@ namespace PeluqueriaElCojo
 
         private void btnCobrar_Click(object sender, EventArgs e)
         {
-            if (_clienteSeleccionado == null)
+            if (_clienteSeleccionado == null || cmbBarberos.SelectedItem == null)
             {
-                MessageBox.Show("Seleccione un cliente de la lista.");
-                return;
-            }
-
-            if (cmbBarberos.SelectedItem == null)
-            {
-                MessageBox.Show("Seleccione un barbero.");
+                MessageBox.Show("Seleccione cliente y barbero.");
                 return;
             }
 
             _barberoSeleccionado = (Empleado)cmbBarberos.SelectedItem;
-
             _serviciosFactura.Clear();
+
             if (chkCorteNormal.Checked) _serviciosFactura.Add(new CorteNormal("Corte", 300, 30));
             if (chkDegradado.Checked) _serviciosFactura.Add(new Degradado("Degradado", 450, 45, (int)numNivel.Value));
             if (chkAfeitado.Checked) _serviciosFactura.Add(new Afeitado("Afeitado", 250, 25, chkToalla.Checked));
@@ -112,17 +112,13 @@ namespace PeluqueriaElCojo
             }
 
             decimal descuento = subtotal * _clienteSeleccionado.ObtenerDescuento();
-            decimal montoConDescuento = subtotal - descuento;
-
-            decimal itbis = montoConDescuento * 0.18m;
-            decimal totalFinal = montoConDescuento + itbis;
+            decimal montoNeto = subtotal - descuento;
+            decimal itbis = montoNeto * 0.18m;
+            decimal totalFinal = montoNeto + itbis;
 
             sb.AppendLine("------------------------------");
             sb.AppendLine(string.Format("Subtotal:   RD${0:N2}", subtotal));
-
-            if (descuento > 0)
-                sb.AppendLine(string.Format("Descuento: -RD${0:N2}", descuento));
-
+            if (descuento > 0) sb.AppendLine(string.Format("Descuento: -RD${0:N2}", descuento));
             sb.AppendLine(string.Format("ITBIS 18%:  RD${0:N2}", itbis));
             sb.AppendLine("TOTAL:      RD$" + totalFinal.ToString("N2"));
 
@@ -137,10 +133,7 @@ namespace PeluqueriaElCojo
         {
             _barberos.Sort();
             MessageBox.Show(GeneradorReportes.ObtenerResumen<Empleado>(_barberos, "Ranking de Ventas"));
-
-            cmbBarberos.DataSource = null;
-            cmbBarberos.DataSource = _barberos;
-            cmbBarberos.DisplayMember = "Nombre";
+            ActualizarComboBarberos();
         }
 
         private void btnBackup_Click(object sender, EventArgs e)
@@ -155,25 +148,20 @@ namespace PeluqueriaElCojo
                 _clienteSeleccionado = _clientes[lstClientes.SelectedIndex];
         }
 
-        // --- NUEVOS MÉTODOS ---
-
         private void btnCerrarSesion_Click(object sender, EventArgs e)
         {
-            DialogResult result = MessageBox.Show("¿Está seguro que desea cerrar sesión?", "Cerrar Sesión", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            DialogResult result = MessageBox.Show("¿Desea cerrar sesión?", "Cerrar Sesión", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (result == DialogResult.Yes)
             {
-                this.Close(); // Esto cierra este form y vuelve al que lo llamó (el de selección de modo)
+                this.Close();
             }
         }
 
         private void btnSalir_Click(object sender, EventArgs e)
         {
-            Application.Exit(); // Cierra todo el programa
+            Application.Exit();
         }
 
-        private void lblTotal_Click(object sender, EventArgs e)
-        {
-
-        }
+        private void lblTotal_Click(object sender, EventArgs e) { }
     }
 }

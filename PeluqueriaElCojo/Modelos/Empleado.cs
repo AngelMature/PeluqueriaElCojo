@@ -20,7 +20,17 @@ namespace PeluqueriaElCojo.Modelos
         public int CompareTo(Empleado otro)
         {
             if (otro == null) return 1;
-            return otro.TotalVentas.CompareTo(this.TotalVentas);
+
+            
+            int resultadoVentas = otro.TotalVentas.CompareTo(this.TotalVentas);
+
+            
+            if (resultadoVentas == 0)
+            {
+                return this.Nombre.CompareTo(otro.Nombre);
+            }
+
+            return resultadoVentas;
         }
 
         public override string ToString()
