@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
-using Microsoft.VisualBasic; // Necesario para el Interaction.InputBox
+using Microsoft.VisualBasic;
 
 namespace PeluqueriaElCojo
 {
@@ -15,14 +15,22 @@ namespace PeluqueriaElCojo
         {
             string password = Interaction.InputBox("Ingrese la contraseña de Administrador:", "Verificación de Seguridad", "");
 
-            if (password == "1234")
+            if (password == "admin")
             {
                 this.Hide();
-                Form1 principal = new Form1(true);
-                principal.ShowDialog();
-                this.Close();
+
+                using (Form1 principal = new Form1(true))
+                {
+                    principal.ShowDialog();
+                }
+
+                // Esta es la clave: solo muestra el login si no se ha cerrado la App
+                if (!this.IsDisposed && !Application.MessageLoop == false)
+                {
+                    this.Show();
+                }
             }
-            else
+            else if (!string.IsNullOrEmpty(password))
             {
                 MessageBox.Show("Contraseña incorrecta. Acceso denegado.", "Error");
             }
@@ -31,14 +39,25 @@ namespace PeluqueriaElCojo
         private void btnBarbero_Click(object sender, EventArgs e)
         {
             this.Hide();
-            Form1 principal = new Form1(false);
-            principal.ShowDialog();
-            this.Close();
+
+            using (Form1 principal = new Form1(false))
+            {
+                principal.ShowDialog();
+            }
+
+            if (!this.IsDisposed)
+            {
+                this.Show();
+            }
+        }
+
+        private void btnSalirLogin_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
         }
 
         private void pictureBox1_Click(object sender, EventArgs e)
         {
-
         }
     }
 }

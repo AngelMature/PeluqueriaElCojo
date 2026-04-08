@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PeluqueriaElCojo.Modelos   //Implementar ranking de barberos con interfaz IComparable
+namespace PeluqueriaElCojo.Modelos
 {
     public class Empleado : IComparable<Empleado>
     {

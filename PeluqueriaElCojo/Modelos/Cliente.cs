@@ -1,5 +1,5 @@
-﻿using System;
-using PeluqueriaElCojo.Atributos;
+﻿using PeluqueriaElCojo.Atributos;
+using System;
 
 namespace PeluqueriaElCojo.Modelos
 {
@@ -19,6 +19,12 @@ namespace PeluqueriaElCojo.Modelos
         public TipoCliente Tipo { get; set; }
         public DateTime FechaRegistro { get; set; }
 
+        // Propiedad para acceder a las visitas (Encapsulación)
+        public int Visitas
+        {
+            get { return _visitas; }
+        }
+
         public Cliente(string nombre, string telefono)
         {
             Id = ++_contadorId;
@@ -32,6 +38,7 @@ namespace PeluqueriaElCojo.Modelos
         public void RegistrarVisita()
         {
             _visitas++;
+
             if (_visitas >= 10) Tipo = TipoCliente.VIP;
             else if (_visitas >= 3) Tipo = TipoCliente.Regular;
         }
@@ -46,9 +53,23 @@ namespace PeluqueriaElCojo.Modelos
             }
         }
 
+
+        public override string ToString()
+        {
+            return string.Format("ID: {0} | Nombre: {1} | Tel: {2} | Tipo: {3} | Visitas: {4}",
+                Id, Nombre, Telefono, Tipo, _visitas);
+        }
+
         public string TelefonoFormateado()
         {
-            return string.Format("{0:###-###-####}", long.Parse(Telefono.Replace("-", "")));
+            try
+            {
+                return string.Format("{0:###-###-####}", long.Parse(Telefono.Replace("-", "").Replace(" ", "").Replace("(", "").Replace(")", "")));
+            }
+            catch
+            {
+                return Telefono; // Si falla el parseo, devuelve el original
+            }
         }
     }
 

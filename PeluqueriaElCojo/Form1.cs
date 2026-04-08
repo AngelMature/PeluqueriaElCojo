@@ -10,28 +10,25 @@ namespace PeluqueriaElCojo
     public partial class Form1 : Form
     {
         private List<Cliente> _clientes = new List<Cliente>();
-        private List<Servicio> _serviciosSeleccionados = new List<Servicio>();
         private List<Empleado> _barberos = new List<Empleado>();
-        private Cliente _clienteActual = null;
-        private bool _esAdmin;
+        private List<Servicio> _serviciosFactura = new List<Servicio>();
+        private Cliente _clienteSeleccionado = null;
+        private Empleado _barberoSeleccionado = null;
 
         public Form1(bool esAdmin)
         {
             InitializeComponent();
-            this._esAdmin = esAdmin;
-            ValidarSesion();
-            CargarDatos();
-        }
 
-        private void CargarDatos()
-        {
             _barberos.Add(new Empleado("Juan Manuel", "Principal", 25000) { TotalVentas = 5800 });
             _barberos.Add(new Empleado("Roberto", "Junior", 18000) { TotalVentas = 3200 });
-        }
 
-        private void ValidarSesion()
-        {
-            if (!_esAdmin)
+            cmbBarberos.DataSource = null;
+            cmbBarberos.DataSource = _barberos;
+            cmbBarberos.DisplayMember = "Nombre";
+
+            cmbTipoCliente.DataSource = Enum.GetValues(typeof(TipoCliente));
+
+            if (!esAdmin)
             {
                 btnBackup.Enabled = false;
                 btnVerRanking.Visible = false;
@@ -45,95 +42,136 @@ namespace PeluqueriaElCojo
             }
         }
 
+        private void cmbBarberos_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cmbBarberos.SelectedIndex >= 0)
+            {
+                _barberoSeleccionado = (Empleado)cmbBarberos.SelectedItem;
+            }
+        }
+
         private void btnAgregarCliente_Click(object sender, EventArgs e)
         {
-            Cliente c = new Cliente(txtNombre.Text, txtTelefono.Text);
-            var errores = Validador.Validar(c);
+            Cliente nuevo = new Cliente(txtNombre.Text, txtTelefono.Text)
+            {
+                Tipo = (TipoCliente)cmbTipoCliente.SelectedItem
+            };
+
+            List<string> errores = Validador.Validar(nuevo);
 
             if (errores.Count > 0)
             {
-                MessageBox.Show(string.Join("\n", errores), "Error");
+                MessageBox.Show(string.Join("\n", errores), "Error de Validación");
                 return;
             }
 
-            _clientes.Add(c);
-            lstClientes.Items.Add(c.Nombre);
+            _clientes.Add(nuevo);
+            lstClientes.Items.Add(nuevo.Nombre);
             txtNombre.Clear();
             txtTelefono.Clear();
         }
 
         private void btnCobrar_Click(object sender, EventArgs e)
         {
-            if (_clienteActual == null)
+            if (_clienteSeleccionado == null)
             {
-                MessageBox.Show("Debe seleccionar un cliente de la lista derecha.");
+                MessageBox.Show("Seleccione un cliente de la lista.");
                 return;
             }
 
-            _serviciosSeleccionados.Clear();
+            if (cmbBarberos.SelectedItem == null)
+            {
+                MessageBox.Show("Seleccione un barbero.");
+                return;
+            }
 
-            if (chkCorteNormal.Checked) _serviciosSeleccionados.Add(new CorteNormal("Corte", 300, 30));
-            if (chkDegradado.Checked) _serviciosSeleccionados.Add(new Degradado("Degradado", 450, 45, (int)numNivel.Value));
-            if (chkAfeitado.Checked) _serviciosSeleccionados.Add(new Afeitado("Afeitado", 250, 25, chkToalla.Checked));
-            if (chkCejas.Checked) _serviciosSeleccionados.Add(new CorteCejas("Cejas", 150, 15));
+            _barberoSeleccionado = (Empleado)cmbBarberos.SelectedItem;
 
-            if (_serviciosSeleccionados.Count == 0) return;
+            _serviciosFactura.Clear();
+            if (chkCorteNormal.Checked) _serviciosFactura.Add(new CorteNormal("Corte", 300, 30));
+            if (chkDegradado.Checked) _serviciosFactura.Add(new Degradado("Degradado", 450, 45, (int)numNivel.Value));
+            if (chkAfeitado.Checked) _serviciosFactura.Add(new Afeitado("Afeitado", 250, 25, chkToalla.Checked));
+            if (chkCejas.Checked) _serviciosFactura.Add(new CorteCejas("Cejas", 150, 15));
 
-            _clienteActual.RegistrarVisita();
-            decimal total = 0;
+            if (_serviciosFactura.Count == 0) return;
+
+            decimal subtotal = 0;
             StringBuilder sb = new StringBuilder();
+
             sb.AppendLine("      PELUQUERÍA EL COJO      ");
             sb.AppendLine("------------------------------");
-            sb.AppendLine("Cliente: " + _clienteActual.Nombre);
+            sb.AppendLine("Cliente: " + _clienteSeleccionado.Nombre);
+            sb.AppendLine("Barbero: " + _barberoSeleccionado.Nombre);
+            sb.AppendLine("Tipo: " + _clienteSeleccionado.Tipo.ToString());
             sb.AppendLine("------------------------------");
 
-            foreach (var s in _serviciosSeleccionados)
+            foreach (Servicio s in _serviciosFactura)
             {
-                total += s.CalcularPrecio();
+                subtotal += s.CalcularPrecio();
                 sb.AppendLine(s.GenerarLineaRecibo());
             }
 
-            decimal itbis = total * 0.18m;
-            decimal final = total + itbis;
+            decimal descuento = subtotal * _clienteSeleccionado.ObtenerDescuento();
+            decimal montoConDescuento = subtotal - descuento;
+
+            decimal itbis = montoConDescuento * 0.18m;
+            decimal totalFinal = montoConDescuento + itbis;
 
             sb.AppendLine("------------------------------");
-            sb.AppendLine(string.Format("Subtotal:   RD${0:N2}", total));
-            sb.AppendLine(string.Format("ITBIS (18%): RD${0:N2}", itbis));
-            sb.AppendLine(string.Format("TOTAL:      RD${0:N2}", final));
+            sb.AppendLine(string.Format("Subtotal:   RD${0:N2}", subtotal));
+
+            if (descuento > 0)
+                sb.AppendLine(string.Format("Descuento: -RD${0:N2}", descuento));
+
+            sb.AppendLine(string.Format("ITBIS 18%:  RD${0:N2}", itbis));
+            sb.AppendLine("TOTAL:      RD$" + totalFinal.ToString("N2"));
 
             txtRecibo.Text = sb.ToString();
-            lblTotal.Text = string.Format("TOTAL: RD${0:N2}", final);
-        }
+            lblTotal.Text = "TOTAL: RD$" + totalFinal.ToString("N2");
 
-        private void btnBackup_Click(object sender, EventArgs e)
-        {
-            GeneradorReportes.CrearBackup<Cliente>(_clientes, "Respaldo.txt");
-            MessageBox.Show("Respaldo guardado en Respaldo.txt");
+            _clienteSeleccionado.RegistrarVisita();
+            _barberoSeleccionado.TotalVentas += totalFinal;
         }
 
         private void btnVerRanking_Click(object sender, EventArgs e)
         {
             _barberos.Sort();
-            MessageBox.Show(GeneradorReportes.ObtenerResumen(_barberos, "Ventas Mensuales"));
+            MessageBox.Show(GeneradorReportes.ObtenerResumen<Empleado>(_barberos, "Ranking de Ventas"));
+
+            cmbBarberos.DataSource = null;
+            cmbBarberos.DataSource = _barberos;
+            cmbBarberos.DisplayMember = "Nombre";
+        }
+
+        private void btnBackup_Click(object sender, EventArgs e)
+        {
+            GeneradorReportes.CrearBackup<Cliente>(_clientes, "Respaldo.txt");
+            MessageBox.Show("Backup generado exitosamente.");
         }
 
         private void lstClientes_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (lstClientes.SelectedIndex >= 0)
-                _clienteActual = _clientes[lstClientes.SelectedIndex];
+                _clienteSeleccionado = _clientes[lstClientes.SelectedIndex];
         }
 
-        private void numNivel_ValueChanged(object sender, EventArgs e)
+        // --- NUEVOS MÉTODOS ---
+
+        private void btnCerrarSesion_Click(object sender, EventArgs e)
         {
-
+            DialogResult result = MessageBox.Show("¿Está seguro que desea cerrar sesión?", "Cerrar Sesión", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (result == DialogResult.Yes)
+            {
+                this.Close(); // Esto cierra este form y vuelve al que lo llamó (el de selección de modo)
+            }
         }
 
-        private void chkToalla_CheckedChanged(object sender, EventArgs e)
+        private void btnSalir_Click(object sender, EventArgs e)
         {
-
+            Application.Exit(); // Cierra todo el programa
         }
 
-        private void pictureBox1_Click(object sender, EventArgs e)
+        private void lblTotal_Click(object sender, EventArgs e)
         {
 
         }
