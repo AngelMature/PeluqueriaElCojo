@@ -10,7 +10,7 @@ namespace PeluqueriaElCojo
     public partial class Form1 : Form
     {
         private List<Cliente> _clientes = new List<Cliente>();
-        private List<Servicio> _serviciosFactura = new List<Servicio>();
+        private List<Servicio> _serviciosSeleccionados = new List<Servicio>();
         private List<Empleado> _barberos = new List<Empleado>();
         private Cliente _clienteActual = null;
         private bool _esAdmin;
@@ -19,38 +19,40 @@ namespace PeluqueriaElCojo
         {
             InitializeComponent();
             this._esAdmin = esAdmin;
+            ValidarSesion();
+            CargarDatos();
+        }
 
-            AplicarPermisos(); // aquí aplicamos control de roles
-
+        private void CargarDatos()
+        {
             _barberos.Add(new Empleado("Juan Manuel", "Principal", 25000) { TotalVentas = 5800 });
             _barberos.Add(new Empleado("Roberto", "Junior", 18000) { TotalVentas = 3200 });
         }
 
-        //  MÉTODO NUEVO PARA CONTROL DE PRIVILEGIOS
-        private void AplicarPermisos()
+        private void ValidarSesion()
         {
             if (!_esAdmin)
             {
-                btnBackup.Visible = false;
+                btnBackup.Enabled = false;
                 btnVerRanking.Visible = false;
-                lblStatus.Text = "Sesión: Barbero";
+                lblStatus.Text = "Sesión: Barbero (Acceso Limitado)";
+                lblStatus.ForeColor = System.Drawing.Color.DarkRed;
             }
             else
             {
-                btnBackup.Visible = true;
-                btnVerRanking.Visible = true;
-                lblStatus.Text = "Sesión: Administrador";
+                lblStatus.Text = "Sesión: Administrador (Acceso Total)";
+                lblStatus.ForeColor = System.Drawing.Color.DarkBlue;
             }
         }
 
         private void btnAgregarCliente_Click(object sender, EventArgs e)
         {
             Cliente c = new Cliente(txtNombre.Text, txtTelefono.Text);
-
             var errores = Validador.Validar(c);
+
             if (errores.Count > 0)
             {
-                MessageBox.Show(string.Join("\n", errores), "Validación");
+                MessageBox.Show(string.Join("\n", errores), "Error");
                 return;
             }
 
@@ -62,64 +64,73 @@ namespace PeluqueriaElCojo
 
         private void btnCobrar_Click(object sender, EventArgs e)
         {
-            if (_clienteActual == null) return;
-            _serviciosFactura.Clear();
+            if (_clienteActual == null)
+            {
+                MessageBox.Show("Debe seleccionar un cliente de la lista derecha.");
+                return;
+            }
 
-            if (chkCorteNormal.Checked) _serviciosFactura.Add(new CorteNormal("Corte", 300, 30));
-            if (chkDegradado.Checked) _serviciosFactura.Add(new Degradado("Degradado", 450, 45, (int)numNivel.Value));
-            if (chkAfeitado.Checked) _serviciosFactura.Add(new Afeitado("Afeitado", 250, 25, chkToalla.Checked));
-            if (chkCejas.Checked) _serviciosFactura.Add(new CorteCejas("Cejas", 150, 15));
+            _serviciosSeleccionados.Clear();
+
+            if (chkCorteNormal.Checked) _serviciosSeleccionados.Add(new CorteNormal("Corte", 300, 30));
+            if (chkDegradado.Checked) _serviciosSeleccionados.Add(new Degradado("Degradado", 450, 45, (int)numNivel.Value));
+            if (chkAfeitado.Checked) _serviciosSeleccionados.Add(new Afeitado("Afeitado", 250, 25, chkToalla.Checked));
+            if (chkCejas.Checked) _serviciosSeleccionados.Add(new CorteCejas("Cejas", 150, 15));
+
+            if (_serviciosSeleccionados.Count == 0) return;
 
             _clienteActual.RegistrarVisita();
-            txtRecibo.Text = GenerarRecibo();
-            lblTotal.Text = "TOTAL: RD$" + CalcularMontoFinal().ToString("N2");
-        }
-
-        private decimal CalcularMontoFinal()
-        {
             decimal total = 0;
-            foreach (var s in _serviciosFactura)
-            {
-                total += s.CalcularPrecio();
-            }
-            return total + (total * 0.18m);
-        }
-
-        private string GenerarRecibo()
-        {
             StringBuilder sb = new StringBuilder();
-            decimal subtotal = 0;
             sb.AppendLine("      PELUQUERÍA EL COJO      ");
             sb.AppendLine("------------------------------");
-            foreach (var s in _serviciosFactura)
+            sb.AppendLine("Cliente: " + _clienteActual.Nombre);
+            sb.AppendLine("------------------------------");
+
+            foreach (var s in _serviciosSeleccionados)
             {
-                subtotal += s.CalcularPrecio();
+                total += s.CalcularPrecio();
                 sb.AppendLine(s.GenerarLineaRecibo());
             }
-            decimal itbis = subtotal * 0.18m;
+
+            decimal itbis = total * 0.18m;
+            decimal final = total + itbis;
+
             sb.AppendLine("------------------------------");
-            sb.AppendLine("ITBIS (18%): RD$" + itbis.ToString("N2"));
-            sb.AppendLine("TOTAL: RD$" + (subtotal + itbis).ToString("N2"));
-            return sb.ToString();
+            sb.AppendLine(string.Format("Subtotal:   RD${0:N2}", total));
+            sb.AppendLine(string.Format("ITBIS (18%): RD${0:N2}", itbis));
+            sb.AppendLine(string.Format("TOTAL:      RD${0:N2}", final));
+
+            txtRecibo.Text = sb.ToString();
+            lblTotal.Text = string.Format("TOTAL: RD${0:N2}", final);
         }
 
         private void btnBackup_Click(object sender, EventArgs e)
         {
-            GeneradorReportes.CrearBackup<Cliente>(_clientes, "Backup_Sistema.txt");
-            MessageBox.Show("Archivo de respaldo creado exitosamente.");
+            GeneradorReportes.CrearBackup<Cliente>(_clientes, "Respaldo.txt");
+            MessageBox.Show("Respaldo guardado en Respaldo.txt");
         }
 
         private void btnVerRanking_Click(object sender, EventArgs e)
         {
             _barberos.Sort();
-            string resumen = GeneradorReportes.ObtenerResumen(_barberos, "Ranking Barberos");
-            MessageBox.Show(resumen);
+            MessageBox.Show(GeneradorReportes.ObtenerResumen(_barberos, "Ventas Mensuales"));
         }
 
         private void lstClientes_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (lstClientes.SelectedIndex >= 0)
                 _clienteActual = _clientes[lstClientes.SelectedIndex];
+        }
+
+        private void numNivel_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void chkToalla_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
