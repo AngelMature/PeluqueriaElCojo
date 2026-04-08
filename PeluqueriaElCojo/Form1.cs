@@ -84,7 +84,7 @@ namespace PeluqueriaElCojo
                 sb.AppendLine(s.GenerarLineaRecibo());
             }
 
-            // B. Procesar Productos Seleccionados (clbProductos)
+            
             if (clbProductos.CheckedItems.Count > 0)
             {
                 sb.AppendLine("- Productos -");
@@ -105,7 +105,7 @@ namespace PeluqueriaElCojo
 
             if (subtotal == 0) return;
 
-            // C. Totales e ITBIS
+            
             decimal descuento = subtotal * _clienteSeleccionado.ObtenerDescuento();
             decimal montoNeto = subtotal - descuento;
             decimal itbis = montoNeto * 0.18m;
@@ -127,7 +127,7 @@ namespace PeluqueriaElCojo
             for (int i = 0; i < clbProductos.Items.Count; i++) clbProductos.SetItemChecked(i, false);
         }
 
-        // --- Los demás métodos (Inventario, Ranking, etc.) se mantienen igual ---
+        
         private void btnInventario_Click(object sender, EventArgs e)
         {
             StringBuilder sb = new StringBuilder();
