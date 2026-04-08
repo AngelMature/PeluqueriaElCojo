@@ -20,18 +20,27 @@ namespace PeluqueriaElCojo
             InitializeComponent();
             this._esAdmin = esAdmin;
 
+            AplicarPermisos(); // aquí aplicamos control de roles
+
+            _barberos.Add(new Empleado("Juan Manuel", "Principal", 25000) { TotalVentas = 5800 });
+            _barberos.Add(new Empleado("Roberto", "Junior", 18000) { TotalVentas = 3200 });
+        }
+
+        //  MÉTODO NUEVO PARA CONTROL DE PRIVILEGIOS
+        private void AplicarPermisos()
+        {
             if (!_esAdmin)
             {
-                btnBackup.Enabled = false;
+                btnBackup.Visible = false;
+                btnVerRanking.Visible = false;
                 lblStatus.Text = "Sesión: Barbero";
             }
             else
             {
+                btnBackup.Visible = true;
+                btnVerRanking.Visible = true;
                 lblStatus.Text = "Sesión: Administrador";
             }
-
-            _barberos.Add(new Empleado("Juan Manuel", "Principal", 25000) { TotalVentas = 5800 });
-            _barberos.Add(new Empleado("Roberto", "Junior", 18000) { TotalVentas = 3200 });
         }
 
         private void btnAgregarCliente_Click(object sender, EventArgs e)
