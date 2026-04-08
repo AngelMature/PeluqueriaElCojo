@@ -1,45 +1,23 @@
-﻿using PeluqueriaElCojo.Modelos;
-using System;
+﻿using System;
+using PeluqueriaElCojo.Atributos;
 
-namespace PeluqueriaElCojo
+namespace PeluqueriaElCojo.Modelos
 {
     public class Cliente
     {
-        private string _nombre;
-        private string _telefono;
-        private int _visitas;
         private static int _contadorId = 0;
+        private int _visitas;
 
-        public int Id { get; private set; }
+        public int Id { get; set; }
 
-        public string Nombre
-        {
-            get { return _nombre; }
-            set
-            {
-                if (string.IsNullOrWhiteSpace(value))
-                    throw new ArgumentException("Nombre requerido");
-                _nombre = value.Trim();
-            }
-        }
+        [Requerido("El nombre del cliente es obligatorio")]
+        public string Nombre { get; set; }
 
-        public string Telefono
-        {
-            get { return _telefono; }
-            set
-            {
-                string limpio = value.Replace("-", "").Replace(" ", "");
-                if (limpio.Length != 10)
-                    throw new ArgumentException("Telefono: 10 digitos");
-                _telefono = limpio;
-            }
-        }
+        [TelefonoDominicano(Mensaje = "Ingrese un teléfono válido (809/829/849)")]
+        public string Telefono { get; set; }
 
         public TipoCliente Tipo { get; set; }
-
-        public int Visitas { get { return _visitas; } }
-
-        public DateTime FechaRegistro { get; }
+        public DateTime FechaRegistro { get; set; }
 
         public Cliente(string nombre, string telefono)
         {
@@ -63,21 +41,21 @@ namespace PeluqueriaElCojo
             switch (Tipo)
             {
                 case TipoCliente.VIP: return 0.15m;
-                case TipoCliente.Regular: return 0.015m;
+                case TipoCliente.Regular: return 0.05m;
                 default: return 0m;
             }
         }
 
         public string TelefonoFormateado()
         {
-            return _telefono.Substring(0, 3) + "-" +
-                   _telefono.Substring(3, 3) + "-" +
-                   _telefono.Substring(6);
+            return string.Format("{0:###-###-####}", long.Parse(Telefono.Replace("-", "")));
         }
+    }
 
-        public override string ToString()
-        {
-            return string.Format("[{0}] {1} ({2}) - {3}", Id, Nombre, Tipo, TelefonoFormateado());
-        }
+    public enum TipoCliente
+    {
+        Nuevo,
+        Regular,
+        VIP
     }
 }

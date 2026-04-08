@@ -5,6 +5,11 @@ namespace PeluqueriaElCojo.Atributos
     [AttributeUsage(AttributeTargets.Property)]
     public class TelefonoDominicanoAttribute : Attribute
     {
-        public string Mensaje => "El formato del teléfono no es válido para República Dominicana";
+        public string Mensaje { get; set; }
+
+        public TelefonoDominicanoAttribute()
+        {
+            this.Mensaje = "Formato de teléfono dominicano inválido";
+        }
     }
 }
