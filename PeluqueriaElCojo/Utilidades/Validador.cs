@@ -16,7 +16,7 @@ namespace PeluqueriaElCojo.Utilidades
             {
                 object valor = prop.GetValue(obj);
 
-                // 1. Validar [Requerido]
+                // 1. Requerido
                 if (Attribute.IsDefined(prop, typeof(RequeridoAttribute)))
                 {
                     if (valor == null || string.IsNullOrEmpty(valor.ToString()))
@@ -26,7 +26,7 @@ namespace PeluqueriaElCojo.Utilidades
                     }
                 }
 
-                // 2. Validar [Rango]
+                // 2. Rango
                 if (Attribute.IsDefined(prop, typeof(RangoAttribute)))
                 {
                     if (valor != null && double.TryParse(valor.ToString(), out double num))
@@ -39,7 +39,7 @@ namespace PeluqueriaElCojo.Utilidades
                     }
                 }
 
-                // 3. Validar [TelefonoDominicano]
+                // TelefonoDominicano
                 if (Attribute.IsDefined(prop, typeof(TelefonoDominicanoAttribute)))
                 {
                     if (valor != null)

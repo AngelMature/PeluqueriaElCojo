@@ -1,9 +1,4 @@
-﻿namespace PeluqueriaElCojo.Modelos 
+﻿namespace PeluqueriaElCojo.Modelos
 {
-    public enum TipoCliente 
-    {
-        Nuevo,
-        Regular,
-        VIP
-    }
+    public enum RolUsuario { Administrador, Barbero, Cajero }
 }
