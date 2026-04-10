@@ -22,19 +22,20 @@ namespace PeluqueriaElCojo
         {
             InitializeComponent();
 
-            // 1. Carga de Datos
             _barberos.Add(new Empleado("Juan Manuel", "Principal", 25000) { TotalVentas = 5800 });
             _barberos.Add(new Empleado("Roberto", "Junior", 18000) { TotalVentas = 3200 });
 
             _inventario.Add(new Producto("P001", "Gel Extra Firme", "Capilar", 350m, 150m, 10, 3));
             _inventario.Add(new Producto("P002", "Cera Mate", "Capilar", 450m, 200m, 2, 5));
 
-            // 2. Llenar la lista de productos en pantalla
             clbProductos.Items.Clear();
             foreach (var p in _inventario) { clbProductos.Items.Add(p); }
 
             ActualizarComboBarberos();
             cmbTipoCliente.DataSource = Enum.GetValues(typeof(TipoCliente));
+
+            // Suscribir el evento de validación para el teléfono
+            txtTelefono.KeyPress += txtTelefono_KeyPress;
 
             if (!esAdmin)
             {
@@ -49,6 +50,14 @@ namespace PeluqueriaElCojo
                 btnVerRanking.Visible = true;
                 lblStatus.Text = "Sesión: Administrador (Acceso Total)";
                 lblStatus.ForeColor = System.Drawing.Color.DarkBlue;
+            }
+        }
+
+        private void txtTelefono_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar))
+            {
+                e.Handled = true;
             }
         }
 
@@ -72,7 +81,6 @@ namespace PeluqueriaElCojo
             sb.AppendLine("Barbero: " + _barberoSeleccionado.Nombre);
             sb.AppendLine("------------------------------");
 
-            // A. Procesar Servicios
             if (chkCorteNormal.Checked) _serviciosFactura.Add(new CorteNormal("Corte", 300, 30));
             if (chkDegradado.Checked) _serviciosFactura.Add(new Degradado("Degradado", 450, 45, (int)numNivel.Value));
             if (chkAfeitado.Checked) _serviciosFactura.Add(new Afeitado("Afeitado", 250, 25, chkToalla.Checked));
@@ -84,7 +92,6 @@ namespace PeluqueriaElCojo
                 sb.AppendLine(s.GenerarLineaRecibo());
             }
 
-            
             if (clbProductos.CheckedItems.Count > 0)
             {
                 sb.AppendLine("- Productos -");
@@ -93,7 +100,7 @@ namespace PeluqueriaElCojo
                     if (p.CantidadStock > 0)
                     {
                         subtotal += p.PrecioVenta;
-                        p.CantidadStock--; // Descontar del inventario
+                        p.CantidadStock--;
                         sb.AppendLine(string.Format("{0,-15} RD${1:N2}", p.Nombre, p.PrecioVenta));
                     }
                     else
@@ -105,7 +112,6 @@ namespace PeluqueriaElCojo
 
             if (subtotal == 0) return;
 
-            
             decimal descuento = subtotal * _clienteSeleccionado.ObtenerDescuento();
             decimal montoNeto = subtotal - descuento;
             decimal itbis = montoNeto * 0.18m;
@@ -123,11 +129,9 @@ namespace PeluqueriaElCojo
             _clienteSeleccionado.RegistrarVisita();
             _barberoSeleccionado.TotalVentas += totalFinal;
 
-            // Limpiar selección para la siguiente venta
             for (int i = 0; i < clbProductos.Items.Count; i++) clbProductos.SetItemChecked(i, false);
         }
 
-        
         private void btnInventario_Click(object sender, EventArgs e)
         {
             StringBuilder sb = new StringBuilder();
