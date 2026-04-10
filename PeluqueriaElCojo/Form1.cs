@@ -1,5 +1,6 @@
 ﻿using PeluqueriaElCojo.Modelos;
 using PeluqueriaElCojo.Utilidades;
+using PeluqueriaElCojo.Datos;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -17,6 +18,7 @@ namespace PeluqueriaElCojo
 
         private Cliente _clienteSeleccionado = null;
         private Empleado _barberoSeleccionado = null;
+        private ClienteDatos _clienteDatos = new ClienteDatos();
 
         public Form1(bool esAdmin)
         {
@@ -34,7 +36,6 @@ namespace PeluqueriaElCojo
             ActualizarComboBarberos();
             cmbTipoCliente.DataSource = Enum.GetValues(typeof(TipoCliente));
 
-            // Suscribir el evento de validación para el teléfono
             txtTelefono.KeyPress += txtTelefono_KeyPress;
 
             if (!esAdmin)
@@ -166,8 +167,18 @@ namespace PeluqueriaElCojo
             Cliente nuevo = new Cliente(txtNombre.Text, txtTelefono.Text) { Tipo = (TipoCliente)cmbTipoCliente.SelectedItem };
             List<string> errores = Validador.Validar(nuevo);
             if (errores.Count > 0) { MessageBox.Show(string.Join("\n", errores)); return; }
-            _clientes.Add(nuevo);
-            lstClientes.Items.Add(nuevo.Nombre);
+
+            try
+            {
+                _clienteDatos.Insertar(nuevo);
+                _clientes.Add(nuevo);
+                lstClientes.Items.Add(nuevo.Nombre);
+                MessageBox.Show("Cliente registrado en la base de datos.");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al guardar en la base de datos: " + ex.Message);
+            }
         }
 
         private void btnVerRanking_Click(object sender, EventArgs e)

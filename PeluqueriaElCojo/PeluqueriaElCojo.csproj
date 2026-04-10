@@ -51,6 +51,7 @@
     <Compile Include="Atributos\RequeridoAttribute.cs" />
     <Compile Include="Atributos\TelefonoDominicanoAttribute.cs" />
     <Compile Include="Atributos\ValidacionAttribute.cs" />
+    <Compile Include="Datos\ClienteDatos.cs" />
     <Compile Include="LoginForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -77,6 +78,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilidades\Backup.cs" />
+    <Compile Include="Utilidades\ConexionDB.cs" />
     <Compile Include="Utilidades\ControlAcceso.cs" />
     <Compile Include="Utilidades\GeneradorReportes.cs" />
     <Compile Include="Utilidades\Validador.cs" />
