@@ -1,39 +1,24 @@
 ﻿using System;
+using System.Data;
 using System.Data.SqlClient;
 
 namespace PeluqueriaElCojo.Utilidades
 {
     public class ConexionDB
     {
-        private string cadena = "Server=.; Database=PeluqueriaElCojo; Integrated Security=True; TrustServerCertificate=True;";
-        public SqlConnection leerConexion = new SqlConnection();
+        
+        public static string ConnectionString = "Server=.; Database=PeluqueriaElCojo; Integrated Security=True; TrustServerCertificate=True;";
 
-        public ConexionDB()
-        {
-            leerConexion.ConnectionString = cadena;
-        }
+        public SqlConnection leerConexion = new SqlConnection(ConnectionString);
 
         public void Abrir()
         {
-            try
-            {
-                if (leerConexion.State == System.Data.ConnectionState.Closed)
-                {
-                    leerConexion.Open();
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            if (leerConexion.State == ConnectionState.Closed) leerConexion.Open();
         }
 
         public void Cerrar()
         {
-            if (leerConexion.State == System.Data.ConnectionState.Open)
-            {
-                leerConexion.Close();
-            }
+            if (leerConexion.State == ConnectionState.Open) leerConexion.Close();
         }
     }
 }

@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
-using System.Linq;
+using System.Data;
 
 namespace PeluqueriaElCojo
 {
@@ -102,6 +102,10 @@ namespace PeluqueriaElCojo
                     {
                         subtotal += p.PrecioVenta;
                         p.CantidadStock--;
+
+                        ProductoDatos pDatos = new ProductoDatos();
+                        pDatos.ActualizarStockEnDB(p.idProducto, 1);
+
                         sb.AppendLine(string.Format("{0,-15} RD${1:N2}", p.Nombre, p.PrecioVenta));
                     }
                     else
@@ -164,6 +168,12 @@ namespace PeluqueriaElCojo
 
         private void btnAgregarCliente_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrWhiteSpace(txtNombre.Text) || string.IsNullOrWhiteSpace(txtTelefono.Text))
+            {
+                MessageBox.Show("Por favor, llena todas las casillas. El nombre y el teléfono no pueden estar en blanco.", "Aviso del Sistema", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             Cliente nuevo = new Cliente(txtNombre.Text, txtTelefono.Text) { Tipo = (TipoCliente)cmbTipoCliente.SelectedItem };
             List<string> errores = Validador.Validar(nuevo);
             if (errores.Count > 0) { MessageBox.Show(string.Join("\n", errores)); return; }
@@ -174,6 +184,9 @@ namespace PeluqueriaElCojo
                 _clientes.Add(nuevo);
                 lstClientes.Items.Add(nuevo.Nombre);
                 MessageBox.Show("Cliente registrado en la base de datos.");
+
+                txtNombre.Clear();
+                txtTelefono.Clear();
             }
             catch (Exception ex)
             {
@@ -183,15 +196,22 @@ namespace PeluqueriaElCojo
 
         private void btnVerRanking_Click(object sender, EventArgs e)
         {
-            _barberos.Sort();
-            MessageBox.Show(GeneradorReportes.ObtenerResumen<Empleado>(_barberos, "Ranking"));
+            ProductoDatos pDatos = new ProductoDatos();
+            DataTable dt = pDatos.ObtenerRankingReal();
+
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("=== RANKING DE BARBEROS (SQL) ===");
+            foreach (DataRow row in dt.Rows)
+            {
+                sb.AppendLine($"{row["Nombre"]}: RD${Convert.ToDecimal(row["TotalVentas"]):N2}");
+            }
+            MessageBox.Show(sb.ToString(), "Ranking de Desempeño");
             ActualizarComboBarberos();
         }
 
         private void btnBackup_Click(object sender, EventArgs e)
         {
-            GeneradorReportes.CrearBackup<Cliente>(_clientes, "Respaldo.txt");
-            MessageBox.Show("OK");
+            PeluqueriaElCojo.Utilidades.Backup.GenerarBackup();
         }
 
         private void lstClientes_SelectedIndexChanged(object sender, EventArgs e)

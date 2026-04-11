@@ -52,6 +52,7 @@
     <Compile Include="Atributos\TelefonoDominicanoAttribute.cs" />
     <Compile Include="Atributos\ValidacionAttribute.cs" />
     <Compile Include="Datos\ClienteDatos.cs" />
+    <Compile Include="Datos\ProductoDatos.cs" />
     <Compile Include="LoginForm.cs">
       <SubType>Form</SubType>
     </Compile>
