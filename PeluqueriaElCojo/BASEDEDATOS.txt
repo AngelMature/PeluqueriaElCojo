@@ -1,0 +1,64 @@
+﻿USE master;
+GO
+
+IF EXISTS (SELECT name FROM sys.databases WHERE name = 'PeluqueriaElCojo')
+BEGIN
+    ALTER DATABASE PeluqueriaElCojo SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+    DROP DATABASE PeluqueriaElCojo;
+END
+GO
+
+CREATE DATABASE PeluqueriaElCojo;
+GO
+
+USE PeluqueriaElCojo; 
+
+GO
+
+CREATE TABLE Barberos (
+    BarberoID INT PRIMARY KEY IDENTITY(1,1),
+    Nombre NVARCHAR(100) NOT NULL,
+    Apodo NVARCHAR(50),
+    SueldoBase DECIMAL(18, 2) NOT NULL,
+    TotalVentas DECIMAL(18, 2) DEFAULT 0
+);
+
+CREATE TABLE Clientes (
+    ClienteID INT PRIMARY KEY IDENTITY(1,1),
+    Nombre NVARCHAR(100) NOT NULL,
+    Telefono NVARCHAR(20) NOT NULL,
+    TipoCliente NVARCHAR(20) DEFAULT 'Nuevo',
+    Visitas INT DEFAULT 0,
+    FechaRegistro DATETIME DEFAULT GETDATE()
+);
+
+CREATE TABLE Productos (
+    ProductoID NVARCHAR(50) PRIMARY KEY,
+    Nombre NVARCHAR(100) NOT NULL,
+    Categoria NVARCHAR(50),
+    PrecioVenta DECIMAL(18, 2) NOT NULL,
+    Costo DECIMAL(18, 2) NOT NULL,
+    CantidadStock INT NOT NULL,
+    StockMinimo INT DEFAULT 2
+);
+
+CREATE TABLE Ventas (
+    VentaID INT PRIMARY KEY IDENTITY(1,1),
+    ClienteID INT FOREIGN KEY REFERENCES Clientes(ClienteID),
+    BarberoID INT FOREIGN KEY REFERENCES Barberos(BarberoID),
+    FechaVenta DATETIME DEFAULT GETDATE(),
+    Subtotal DECIMAL(18, 2),
+    Descuento DECIMAL(18, 2),
+    ITBIS DECIMAL(18, 2),
+    TotalFinal DECIMAL(18, 2)
+);
+GO
+
+INSERT INTO Barberos (Nombre, Apodo, SueldoBase, TotalVentas)
+VALUES ('Juan Manuel', 'Principal', 25000, 5800),
+       ('Roberto', 'Junior', 18000, 3200);
+
+INSERT INTO Productos (ProductoID, Nombre, Categoria, PrecioVenta, Costo, CantidadStock, StockMinimo)
+VALUES ('P001', 'Gel Extra Firme', 'Capilar', 350, 150, 10, 3),
+       ('P002', 'Cera Mate', 'Capilar', 450, 200, 2, 5);
+GO
