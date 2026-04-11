@@ -27,6 +27,26 @@ namespace PeluqueriaElCojo.Datos
             }
         }
 
+        public bool ActualizarVentasBarbero(string nombreBarbero, decimal totalVenta)
+        {
+            string query = "UPDATE Barberos SET TotalVentas = TotalVentas + @total WHERE Nombre = @nombre";
+            using (SqlConnection conn = new SqlConnection(ConexionDB.ConnectionString))
+            {
+                try
+                {
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@nombre", nombreBarbero);
+                    cmd.Parameters.AddWithValue("@total", totalVenta);
+                    conn.Open();
+                    return cmd.ExecuteNonQuery() > 0;
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+        }
+
         public DataTable ObtenerRankingReal()
         {
             DataTable dt = new DataTable();

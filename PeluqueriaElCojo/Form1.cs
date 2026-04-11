@@ -1,11 +1,11 @@
-﻿using PeluqueriaElCojo.Modelos;
+﻿using PeluqueriaElCojo.Datos;
+using PeluqueriaElCojo.Modelos;
 using PeluqueriaElCojo.Utilidades;
-using PeluqueriaElCojo.Datos;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Text;
 using System.Windows.Forms;
-using System.Data;
 
 namespace PeluqueriaElCojo
 {
@@ -133,6 +133,10 @@ namespace PeluqueriaElCojo
 
             _clienteSeleccionado.RegistrarVisita();
             _barberoSeleccionado.TotalVentas += totalFinal;
+
+            // ACTUALIZAR VENTAS DEL BARBERO EN LA BASE DE DATOS
+            ProductoDatos dbVentas = new ProductoDatos();
+            dbVentas.ActualizarVentasBarbero(_barberoSeleccionado.Nombre, totalFinal);
 
             for (int i = 0; i < clbProductos.Items.Count; i++) clbProductos.SetItemChecked(i, false);
         }
